@@ -26,6 +26,11 @@ Alternatively, install directly from GitHub:
 pip install "git+https://github.com/SecondBook5/paired-single-cell-pipeline.git"
 ```
 
+Consumer repositories should generate a runtime `project.yaml` and
+`manifest.csv`, then call `paired_sc` against those inputs. That keeps cohort
+selection and paper-specific figure logic in the consumer repo while the shared
+workflow stays centralized here.
+
 ## Typical CLI Flow
 
 ```bash
@@ -39,6 +44,11 @@ paired-sc run core \
   --workdir ./demo_run
 
 paired-sc run advanced \
+  --project examples/skin_paired_human/project.yaml \
+  --manifest examples/skin_paired_human/manifest.csv \
+  --workdir ./demo_run
+
+paired-sc run all \
   --project examples/skin_paired_human/project.yaml \
   --manifest examples/skin_paired_human/manifest.csv \
   --workdir ./demo_run
@@ -64,6 +74,9 @@ A typical run follows four stages:
    latent modeling, optimal transport, robustness checks, and integration
    quality assessment
 4. build a report and export standardized results, figures, and logs
+
+When you want the full shared workflow in one shot, `paired-sc run all` will
+run the core workflow and then the domains enabled in `project.yaml`.
 
 ## What The Package Covers
 
