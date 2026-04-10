@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import numpy as np
 
 import matplotlib
 matplotlib.use("Agg")
@@ -105,9 +106,63 @@ def run(context: DomainContext) -> DomainResult:
 
     message = "Regulatory screening summary completed."
     if dependency_available("pyscenic") and rankings_path and motifs_path:
-        message += " pySCENIC-compatible resources were detected for downstream expansion."
+        try:
+            from arboreto.algo import grnboost2
+            from ctxcore.rnkdb import FeatherRankingDatabase as RankingDatabase
+            from pyscenic.aucell import aucell
+            from pyscenic.prune import prune2df
+            from pyscenic.transform import df2regulons
+            from pyscenic.utils import modules_from_adjacencies
+
+            expr_full = _resolve_gene_matrix(context.adata)
+            if len(expr_full) > context.config.domains.regulatory_max_cells:
+                expr_full = expr_full.sample(context.config.domains.regulatory_max_cells, random_state=42)
+            tf_for_grn = [gene for gene in tf_candidates if gene in expr_full.columns]
+            if tf_for_grn:
+                adj = grnboost2(expr_full, tf_names=tf_for_grn, verbose=False, seed=42)
+                adj_path = outdir / "scenic_adjacencies.csv"
+                adj.to_csv(adj_path, index=False)
+                outputs.append(str(adj_path))
+
+                dbs = [RankingDatabase(fname=str(rankings_path), name=rankings_path.stem)]
+                modules = list(modules_from_adjacencies(adj, expr_full))
+                pruned = prune2df(dbs, modules, str(motifs_path))
+                regulons = df2regulons(pruned)
+                if regulons:
+                    auc = aucell(expr_full, regulons, num_workers=1)
+                    auc_path = outdir / "scenic_auc_matrix.csv"
+                    auc.to_csv(auc_path)
+                    outputs.append(str(auc_path))
+
+                    common = auc.index.intersection(context.adata.obs_names)
+                    if len(common):
+                        auc_ct = auc.loc[common].groupby(context.adata.obs.loc[common, context.config.annotation.cell_type_key]).mean()
+                        top_regs = auc.var().sort_values(ascending=False).head(min(25, auc.shape[1])).index.tolist()
+                        auc_plot = auc_ct[top_regs].copy()
+                        auc_z = auc_plot.apply(lambda col: (col - col.mean()) / col.std(ddof=0) if col.std(ddof=0) > 0 else col * 0, axis=0).fillna(0)
+                        fig_w = max(6.0, len(top_regs) * 0.32 + 1.8)
+                        fig_h = max(4.0, len(auc_z) * 0.32 + 1.8)
+                        fig, ax = plt.subplots(figsize=(fig_w, fig_h))
+                        sns.heatmap(
+                            auc_z,
+                            cmap="RdBu_r",
+                            center=0,
+                            linewidths=0.3,
+                            linecolor="#EEEEEE",
+                            cbar_kws={"label": "Regulon activity (z-score)"},
+                            ax=ax,
+                        )
+                        ax.set_title("pySCENIC regulon activity")
+                        ax.set_xlabel("Regulon")
+                        ax.set_ylabel("Annotation")
+                        outputs.extend(save_figure_bundle(fig, outdir / "scenic_regulon_heatmap"))
+                message += " Full pySCENIC execution completed."
+            else:
+                message += " No configured TFs were present for pySCENIC expansion."
+        except Exception as exc:
+            message += f" Full pySCENIC execution was attempted but fell back to the screening summary ({exc})."
     else:
-        message += " Full pySCENIC execution is intentionally gated behind explicit resource configuration."
+        message += " Full pySCENIC execution is available when rankings and motif resources are configured."
 
     return DomainResult(
         name=name,

@@ -52,8 +52,33 @@ class AnnotationConfig(BaseModel):
 
 class DomainConfig(BaseModel):
     enabled: list[str] = Field(
-        default_factory=lambda: ["liana", "magic", "trajectory", "latent", "regulatory"]
+        default_factory=lambda: [
+            "cell_cycle",
+            "differential_expression",
+            "pathway_enrichment",
+            "liana",
+            "magic",
+            "trajectory",
+            "latent",
+            "regulatory",
+            "cellot",
+            "pseudobulk_de",
+            "pathway_activity",
+            "robustness",
+            "integration_quality",
+        ]
     )
+    de_min_cells_per_condition: int = 10
+    de_logfc_threshold: float = 0.5
+    pathway_gene_sets: list[str] = Field(
+        default_factory=lambda: [
+            "GO_Biological_Process_2023",
+            "KEGG_2021_Human",
+            "Reactome_2022",
+        ]
+    )
+    pathway_top_terms: int = 15
+    pathway_top_genes: int = 100
     liana_expr_prop: float = 0.1
     liana_min_cells: int = 10
     magic_genes: list[str] = Field(default_factory=list)
@@ -61,12 +86,32 @@ class DomainConfig(BaseModel):
     magic_solver: str = "approximate"
     trajectory_root_group: str | None = None
     trajectory_groupby: str | None = None
+    trajectory_enable_palantir: bool = True
+    trajectory_enable_cellrank: bool = True
+    trajectory_max_cells: int = 5000
     latent_n_latent: int = 30
     latent_max_epochs: int = 50
+    cellot_subsample_n: int = 500
+    pseudobulk_min_cells_per_condition: int = 20
+    pseudobulk_min_replicates_per_condition: int = 2
+    pseudobulk_min_count: int = 10
+    pathway_activity_library: str = "MSigDB_Hallmark_2020"
+    pathway_activity_min_genes: int = 5
+    robustness_top_n: int = 8
+    integration_subsample_n: int = 12000
+    integration_n_neighbors: int = 30
+    target_groupby: str | None = None
+    target_group: str | None = None
+    target_marker_genes: list[str] = Field(default_factory=list)
+    target_score_genes: list[str] = Field(default_factory=list)
+    target_subcluster_resolution: float = 0.4
+    target_subcluster_hvgs: int = 2000
+    target_subcluster_neighbors: int = 20
     regulatory_tf_list: str | None = None
     regulatory_rankings: str | None = None
     regulatory_motifs: str | None = None
     regulatory_top_variable_tfs: int = 25
+    regulatory_max_cells: int = 5000
 
 
 class WorkflowConfig(BaseModel):

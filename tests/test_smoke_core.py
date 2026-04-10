@@ -36,3 +36,19 @@ def test_advanced_domains_smoke(smoke_inputs) -> None:
     assert status_map["trajectory"] == "completed"
     assert status_map["regulatory"] == "completed"
 
+
+def test_post_core_domains_smoke(smoke_inputs) -> None:
+    run_core_pipeline(smoke_inputs["project"], smoke_inputs["manifest"], smoke_inputs["workdir"])
+    results = run_advanced_domains(
+        smoke_inputs["project"],
+        smoke_inputs["manifest"],
+        smoke_inputs["workdir"],
+        domains=["cell_cycle", "differential_expression", "pseudobulk_de", "robustness", "integration_quality"],
+    )
+    status_map = {row["name"]: row["status"] for row in results}
+    assert status_map["cell_cycle"] in {"completed", "skipped"}
+    assert status_map["differential_expression"] in {"completed", "skipped"}
+    assert status_map["pseudobulk_de"] in {"completed", "skipped"}
+    assert status_map["robustness"] in {"completed", "skipped"}
+    assert status_map["integration_quality"] == "completed"
+

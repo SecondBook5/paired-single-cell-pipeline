@@ -130,6 +130,17 @@ def _run_single_domain(name: str, project: Path, manifest: Path, workdir: Path) 
     typer.echo(json.dumps(results, indent=2))
 
 
+@domain_app.command("run")
+def domain_run(
+    name: str = typer.Option(..., help="Registered domain name."),
+    project: Path = typer.Option(..., exists=True, file_okay=True, dir_okay=False),
+    manifest: Path = typer.Option(..., exists=True, file_okay=True, dir_okay=False),
+    workdir: Path = typer.Option(...),
+) -> None:
+    """Run any registered domain by name."""
+    _run_single_domain(name, project, manifest, workdir)
+
+
 @domain_app.command("liana")
 def domain_liana(
     project: Path = typer.Option(..., exists=True, file_okay=True, dir_okay=False),

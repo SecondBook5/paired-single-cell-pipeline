@@ -59,8 +59,10 @@ A typical run follows four stages:
 1. validate a `project.yaml` and `manifest.csv` pair
 2. run the core workflow to load matrices, perform QC, normalize, integrate,
    cluster, and annotate cells
-3. run domain analyses such as LIANA, MAGIC, trajectory inference, latent
-   modeling, or regulatory-network analysis
+3. run post-core and advanced domains for cell-cycle scoring, differential
+   expression, pathway analysis, intercellular communication, trajectory and
+   latent modeling, optimal transport, robustness checks, and integration
+   quality assessment
 4. build a report and export standardized results, figures, and logs
 
 ## What The Package Covers
@@ -71,12 +73,32 @@ A typical run follows four stages:
 - donor-aware paired summaries and pseudobulk aggregation
 - differential abundance analysis
 - callable analysis domains:
+  - `cell_cycle`
+  - `differential_expression`
+  - `pathway_enrichment`
   - `liana`
   - `magic`
   - `trajectory`
   - `latent`
   - `regulatory`
+  - `cellot`
+  - `pseudobulk_de`
+  - `pathway_activity`
+  - `robustness`
+  - `integration_quality`
+  - `target_population`
+  - `target_subclustering`
 - standardized `results/`, `figures/`, `reports/`, and `logs/` outputs
+
+Any registered domain can be run directly with:
+
+```bash
+paired-sc domain run \
+  --name differential_expression \
+  --project examples/skin_paired_human/project.yaml \
+  --manifest examples/skin_paired_human/manifest.csv \
+  --workdir ./demo_run
+```
 
 ## Public API
 
@@ -87,18 +109,28 @@ from paired_sc import (
     build_report,
     run_core_pipeline,
     run_advanced_domains,
+    run_cell_cycle,
+    run_differential_expression,
+    run_pathway_enrichment,
     run_liana,
     run_magic,
     run_trajectory,
     run_latent,
     run_regulatory,
+    run_cellot,
+    run_pseudobulk_de,
+    run_pathway_activity,
+    run_robustness,
+    run_integration_quality,
+    run_target_population,
+    run_target_subclustering,
 )
 ```
 
 Domain entry points are also available directly:
 
 ```python
-from paired_sc.domains import run_trajectory, run_regulatory
+from paired_sc.domains import run_trajectory, run_regulatory, run_cellot, run_target_subclustering
 ```
 
 ## Input Contracts
