@@ -263,6 +263,15 @@ The flagship example lives in
 example annotation remapping adapter while leaving the core package itself
 tissue-agnostic.
 
+## How To Cite
+
+If you use `paired_sc` in published work, please cite this repository using
+[CITATION.cff](CITATION.cff).
+
+Users should also cite the relevant third-party methods used in their specific
+workflow, such as Scanpy, Harmony, CellTypist, LIANA, MAGIC, scvi-tools,
+pySCENIC, or other downstream methods enabled in `project.yaml`.
+
 ## Reproducibility Notes
 
 - `requirements.txt` captures a pip-installable full workflow stack.
