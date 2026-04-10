@@ -1,5 +1,9 @@
 # paired-single-cell-pipeline
 
+[![CI](https://github.com/SecondBook5/paired-single-cell-pipeline/actions/workflows/ci.yml/badge.svg)](https://github.com/SecondBook5/paired-single-cell-pipeline/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)](pyproject.toml)
+
 `paired_sc` is the installable package behind the
 `paired-single-cell-pipeline` repository. It provides a CLI and Python API for
 paired human tissue single-cell RNA-seq analysis, from manifest-driven 10x H5
@@ -8,8 +12,18 @@ downstream domain analyses.
 
 ## Install And Run
 
+Clone the repository and install it into your environment:
+
 ```bash
+git clone https://github.com/SecondBook5/paired-single-cell-pipeline.git
+cd paired-single-cell-pipeline
 pip install -e .
+```
+
+Alternatively, install directly from GitHub:
+
+```bash
+pip install "git+https://github.com/SecondBook5/paired-single-cell-pipeline.git"
 ```
 
 ## Typical CLI Flow
