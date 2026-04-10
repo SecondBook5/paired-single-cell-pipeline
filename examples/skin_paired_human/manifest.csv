@@ -1,0 +1,8 @@
+sample_id,donor_id,condition,batch,matrix_h5,sample_name,replicate_group,metrics_csv,metadata_json
+Set1_norm1_v8,P1,Normal,Set1,/path/to/Set1_norm1_v8.h5,norm1_v8,P1_Normal,, 
+Set1_LE1_v8,P1,LE,Set1,/path/to/Set1_LE1_v8.h5,LE1_v8,P1_LE,,
+Set4_norm4_v8,P4,Normal,Set4,/path/to/Set4_norm4_v8.h5,norm4_v8,P4_Normal,, 
+Set4_LE4_v8,P4,LE,Set4,/path/to/Set4_LE4_v8.h5,LE4_v8,P4_LE,,
+Set6_norm6_v8,P6,Normal,Set6,/path/to/Set6_norm6_v8.h5,norm6_v8,P6_Normal,,
+Set6_LE6_v8,P6,LE,Set6,/path/to/Set6_LE6_v8.h5,LE6_v8,P6_LE,,
+

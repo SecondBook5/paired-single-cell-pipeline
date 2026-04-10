@@ -1,0 +1,65 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "paired-sc"
+version = "0.1.0"
+description = "Paired human tissue scRNA-seq workflows with donor-aware analysis, domain modules, and report generation."
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.10"
+authors = [
+  { name = "AJ Book" }
+]
+keywords = [
+  "single-cell",
+  "scrna-seq",
+  "anndata",
+  "scanpy",
+  "paired-tissue",
+  "bioinformatics",
+]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Science/Research",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Topic :: Scientific/Engineering :: Bio-Informatics",
+]
+dependencies = [
+  "anndata>=0.11",
+  "celltypist>=1.7",
+  "harmonypy>=0.2",
+  "h5py>=3.10",
+  "matplotlib>=3.8",
+  "numpy>=1.24",
+  "pandas>=2.1",
+  "pydantic>=2.7",
+  "PyYAML>=6.0",
+  "scanpy>=1.10",
+  "scipy>=1.11",
+  "seaborn>=0.13",
+  "statsmodels>=0.14",
+  "typer>=0.12",
+]
+
+[project.urls]
+Homepage = "https://github.com/SecondBook5/paired-single-cell-pipeline"
+Documentation = "https://github.com/SecondBook5/paired-single-cell-pipeline/tree/main/docs"
+Issues = "https://github.com/SecondBook5/paired-single-cell-pipeline/issues"
+
+[project.scripts]
+"paired-sc" = "paired_sc.cli.app:main"
+pts = "paired_sc.cli.app:main"
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

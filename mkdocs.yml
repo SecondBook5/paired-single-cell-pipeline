@@ -1,0 +1,10 @@
+﻿site_name: paired_sc
+theme:
+  name: material
+nav:
+  - Home: index.md
+  - Methods: methods.md
+  - Domains: domains.md
+  - Example Profile: example_skin.md
+
+

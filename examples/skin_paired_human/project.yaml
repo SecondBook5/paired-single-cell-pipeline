@@ -1,0 +1,45 @@
+project_name: skin_paired_human
+project_subtitle: Example paired human skin workflow
+condition_key: condition
+case_condition: LE
+control_condition: Normal
+donor_key: donor_id
+batch_key: batch
+sample_key: sample_id
+replicate_key: replicate_group
+condition_colors:
+  Normal: "#1B4F8A"
+  LE: "#C41E3A"
+qc:
+  min_genes: 200
+  min_counts: 500
+  max_counts: null
+  max_pct_mt: 20.0
+  min_cells_per_gene: 10
+preprocess:
+  target_sum: 10000.0
+  hvg_flavor: seurat_v3
+  n_top_genes: 3000
+  scale_max_value: 10.0
+  pca_n_comps: 50
+  harmony_max_iter: 20
+  neighbors_n_neighbors: 15
+  neighbors_n_pcs: 30
+  umap_min_dist: 0.3
+  umap_spread: 1.0
+annotation:
+  backend: celltypist
+  model: Adult_Human_Skin.pkl
+  primary_leiden_resolution: 0.5
+  leiden_resolutions: [0.3, 0.5, 0.8, 1.2]
+  cell_type_key: cell_type
+  label_map_path: skin_adapter.py
+domains:
+  enabled: [liana, magic, trajectory, latent, regulatory]
+  magic_genes: [IL4, IL13, IL33, TNF, IFNG]
+outputs:
+  results_dir: results
+  figures_dir: figures
+  reports_dir: reports
+  logs_dir: logs
+
